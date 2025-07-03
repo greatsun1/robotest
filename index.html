@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Hover in Table</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    td {
+      padding: 20px;
+      text-align: center;
+      vertical-align: middle;
+      position: relative;
+    }
+
+    .button {
+      position: relative;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .button:hover .large-image {
+      transform: scale(5); /* 放大图片 */
+      opacity: 1;
+    }
+
+    .large-image {
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      transform: scale(0); /* 初始尺寸为0 */
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+      transform-origin: center;
+      z-index: -1;
+    }
+
+    .large-image img {
+      width: 200px; /* 原始图片尺寸 */
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+
+
+
+  <table>
+    <tr>
+      <td>
+        <button class="button">
+          Button 1
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 1">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 2
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 2">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 3
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 3">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 4
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 4">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 5
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 5">
+          </div>
+        </button>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <button class="button">
+          Button 6
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 6">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 7
+          <div class="large-image">
+            <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/mycat1.webp" alt="Image 7">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 8
+          <div class="large-image">
+            <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/mydata1.webp" alt="Image 8">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 9
+          <div class="large-image">
+            <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/mytest.png" alt="Image 9">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 10
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 10">
+          </div>
+        </button>
+      </td>
+    </tr>
+
+
+        <tr>
+      <td>
+        <button class="button">
+          Button 1
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 1">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 2
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 2">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 3
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 3">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 4
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 4">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 5
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 5">
+          </div>
+        </button>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <button class="button">
+          Button 6
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 6">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 7
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 7">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 8
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 8">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 9
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 9">
+          </div>
+        </button>
+      </td>
+      <td>
+        <button class="button">
+          Button 10
+          <div class="large-image">
+            <img src="https://q9.itc.cn/images01/20240411/cb8f350d36ea4c9c948fc65c00e02ed4.jpeg" alt="Image 10">
+          </div>
+        </button>
+      </td>
+    </tr>
+    <!-- 添加更多行以完成4x5的表格 -->
+  </table>
+
+</body>
+</html>
