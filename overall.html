@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Hover in Table</title>
+<link rel="stylesheet" type="text/css" href="cStyle.css">
+</head>
+
+<body>
+<main>
+<article>
+<header>
+  <div id="tstPurpose">
+
+  </div>
+
+<div id="tblExplanation">
+<h1>表格中各个item的含义</h1>
+<pre style="margin:0px;padding: 0px">
+  input|initLoc|sys.info|finalLoc|pred-result|observed|notes|revision</pre>
+<ul style="list-style-type: square">
+<li><b>input</b>:用于机器人操作的指令,包含音频以及asr识别出的文字部分;</li>
+<li><b>initLoc</b>:机器人的初始位置(所用的导航地图是哪个/可以存储该导航地图?在地图中的位置在哪里?固定位置全视野相机的拍摄结果);</li>
+<li><b>sys.info</b>:机器人操作系统若干状态记录,包括CPU利用率、CPU温度、内存使用情况;</li>
+<li><b>finalLoc</b>:机器人的停止位置(所用的导航地图是哪个/可以存储该导航地图?在地图中的位置在哪里?固定位置全视野相机的拍摄结果);</li>
+<li><b>pred-result</b>:机器人自己的预测结果,将两次尝试所对应的文本输出结果存储下来,最好是鼠标悬浮就能显示——</li>
+<li><b>observed</b>:测试人员观察是否成功,测试人员的额外观察或者见解;</li>
+<li><b>revision</b>:开发人员可修订、可撰写修改意见——</li>
+</ul>
+</div>
+</header>
+
+
+
+
+<section id="dt20250704">
+<h1>0704/一楼大厅</h1>
+<div>
+<h2>测试数据记录</h2>
+<table>
+<thead><tr>
+<th>input</th>
+<th>initLoc</th>
+<th>sys.info</th>
+<th>finalLoc</th>
+<th>pred-result</th>
+<th>observed</th>
+<th>revision</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>input</td>
+<td>initLoc</td>
+<td>sys.info</td>
+<td>finalLoc</td>
+<td>pred-result</td>
+<td>observed</td>
+<td>revision</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div>
+<h2>其他信息记录</h2>
+</div>
+
+<div>
+<h2>基于测试结果的综合评价</h2>
+</div>
+</section>
+
+
+
+<section id="dt20250705">
+  <h1>0705/五楼实验室与走廊</h1>
+<div>
+<h2>测试数据记录</h2>
+<table>
+<thead><tr>
+<th>input</th>
+<th>initLoc</th>
+<th>sys.info</th>
+<th>finalLoc</th>
+<th>pred-result</th>
+<th>observed</th>
+<th>revision</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>input</td>
+<td>initLoc</td>
+<td>sys.info</td>
+<td>finalLoc</td>
+<td>pred-result</td>
+<td>observed</td>
+<td>revision</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div>
+<h2>其他信息记录</h2>
+</div>
+
+<div>
+<h2>基于测试结果的综合评价</h2>
+</div>
+</section>
+
+
+
+</article>
+
+
+
+
+
+
+
+
+<aside>
+<textarea>
+
+</textarea>
+<nav>
+<button tag="tstPurpose">测试目的</button>
+<button tag="tblExplanation">表格说明</button>
+  <button id="hide_all">hide/show</button>
+<button tag="dt20250704">0704/一楼大厅</button>
+<button tag="dt20250705">0705/五楼实验室与走廊</button>
+</nav>
+</aside>
+</main>
+
+<script>
+  // function tglVisibility(elmid){
+  //    let element=document.getElementById(elmid);
+  //    element.classList.toggle("hidden");
+  // };
+
+  window.onload=function(){
+      document.querySelectorAll("nav>button[tag]").forEach(
+              elm=>elm.addEventListener("click",function(){
+                      let target_id=elm.getAttribute("tag").trim();
+                      let element=document.getElementById(target_id);
+                      element.classList.toggle("hidden");
+              }));
+  document.getElementById("hide_all").addEventListener("click",function(){
+      let butList=Array.from(document.querySelectorAll("nav>button[tag]"));
+      butList.map(elm=>elm.getAttribute("tag")).forEach(
+              id=>document.getElementById(id).classList.toggle("hidden"));});
+  };
+
+</script>
+</body>
+</html>
