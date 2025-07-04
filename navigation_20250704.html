@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>器人导航性能测试评估报告</title>
+<link rel="stylesheet" type="text/css" href="cStyle_20250704.css">
+</head>
+
+<body>
+<main>
+
+<section id="overall">
+  <h1>机器人导航性能测试-概述</h1>
+
+<div id="">
+<h2> 测试目的</h2>
+验证机器人在指定环境中的导航能力，只关注成功与否，不关注其在路径规划、避障、定位精度、动态环境适应性等方面的量化指标。
+</div>
+
+<div id="">
+<h2> 测试环境</h2>
+<ul style="list-style-type: square;margin-top:0px;">
+<li>物理环境：实验室环境，空间较为拥挤，障碍物较多，光照条件充分。</li>
+<li>软件环境：Linux操作系统-具体算法未知。</li>
+<li>硬件配置：睿尔曼带底盘机器人，双机械臂，头部和末端执行器各有深度和rgb摄像头一只。</li>
+</ul>
+</div>
+</section>
+
+
+
+
+
+
+
+<section id="data">
+<h1>机器人导航性能测试-数据记录</h1>
+<table>
+<thead><tr>
+<th>序</th>
+<th>input</th>
+<th>initLoc</th>
+<th>sys.info</th>
+<th>finalLoc</th>
+<th>pred-result</th>
+<th>observed</th>
+<th>su.</th>
+<th>revision</th>
+</tr></thead>
+<tbody>
+
+
+
+
+<tr>
+<td>1</td>
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/001/input.txt">
+查看详情<div class="content-div"></div>
+</td>
+
+<td>
+<button class="butImg" text=""> 外部相机拍摄
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/001/start_camera.jpg" alt="InitLocation">
+      </div>
+</button>
+<button class="butImg" text=""> 导航地图状态
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/001/start_map1.jpg" alt="InitLocation">
+      </div>
+</button>
+</td>
+
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/001/sysinfo.txt">
+查看详情<div class="content-div"></div>
+</td>
+
+
+<td>
+  <button class="butImg" text=""> 外部相机拍摄
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/001/end_camera.jpg" alt="InitLocation">
+      </div>
+</button>
+<button class="butImg" text=""> 导航地图状态
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/001/end_map1.jpg" alt="InitLocation">
+      </div>
+</button>
+</td>
+
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/001/predict.txt">
+查看详情<div class="content-div"></div> </button>
+</td>
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/001/observed.txt">
+查看详情<div class="content-div"></div>
+</td>
+<td>否</td>
+<td>revision</td>
+</tr>
+
+
+
+
+
+
+
+<tr>
+<td>1</td>
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/002/input.txt">
+查看详情<div class="content-div"></div>
+</td>
+
+<td>
+<button class="butImg" text=""> 外部相机拍摄
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/002/start_camera.jpg" alt="InitLocation">
+      </div>
+</button>
+<button class="butImg" text=""> 导航地图状态
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/002/start_map1.jpg" alt="InitLocation">
+      </div>
+</button>
+</td>
+
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/002/sysinfo.txt">
+查看详情<div class="content-div"></div>
+</td>
+
+
+<td>
+  <button class="butImg" text=""> 外部相机拍摄
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/002/end_camera1.jpg" alt="InitLocation">
+      </div>
+</button>
+<button class="butImg" text=""> 导航地图状态
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/002/end_map1.jpg" alt="InitLocation">
+      </div>
+</button>
+</td>
+
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/002/predict.txt">
+查看详情<div class="content-div"></div> </button>
+</td>
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/002/observed.txt">
+查看详情<div class="content-div"></div>
+</td>
+<td>是</td>
+<td>revision</td>
+</tr>
+
+
+
+
+
+
+
+
+
+<tr>
+<td>1</td>
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/003/input.txt">
+查看详情<div class="content-div"></div>
+</button></td>
+
+<td>
+<button class="butImg" text=""> 外部相机拍摄
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/003/start_camera.jpg" alt="InitLocation">
+      </div>
+</button>
+<button class="butImg" text=""> 导航地图状态
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/003/start_map1.jpg" alt="InitLocation">
+      </div>
+</button>
+</td>
+
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/003/sysinfo.txt" data-filled="true">
+查看详情<div class="content-div" style="display: none; top: 411.333px; left: 473.479px;"></div>
+</button></td>
+
+
+<td>
+  <button class="butImg" text=""> 外部相机拍摄
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/003/end_camera.jpg" alt="InitLocation">
+      </div>
+</button>
+<button class="butImg" text=""> 导航地图状态
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/003/end_map1.jpg" alt="InitLocation">
+      </div>
+</button>
+</td>
+
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/003/predict.txt">
+查看详情<div class="content-div"></div> </button>
+</td>
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/003/observed.txt">
+查看详情<div class="content-div"></div>
+</button></td>
+<td>否</td>
+<td>revision</td>
+</tr>
+
+
+
+<tr>
+<td>1</td>
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/004/input.txt">
+查看详情<div class="content-div"></div>
+</button></td>
+
+<td>
+<button class="butImg" text=""> 外部相机拍摄
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/004/start_camera.jpg" alt="InitLocation">
+      </div>
+</button>
+<button class="butImg" text=""> 导航地图状态
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/004/start_map1.jpg" alt="InitLocation">
+      </div>
+</button>
+</td>
+
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/004/sysinfo.txt">
+查看详情<div class="content-div"></div>
+</button></td>
+
+
+<td>
+  <button class="butImg" text=""> 外部相机拍摄
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/004/end_camera.jpg" alt="InitLocation">
+      </div>
+</button>
+<button class="butImg" text=""> 导航地图状态
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/004/end_map1.jpg" alt="InitLocation">
+      </div>
+</button>
+</td>
+
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/004/predict.txt">
+查看详情<div class="content-div"></div> </button>
+</td>
+
+<td>
+<button class="butText" data-file="https://dostore.oss-cn-shenzhen.aliyuncs.com/robotest/20250704/004/observed.txt">
+查看详情<div class="content-div"></div>
+</button></td>
+<td>否</td>
+<td>revision</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+
+
+
+<section id="index" style="display:none;">
+<h1>机器人导航性能测试-关联指标评估</h1>
+    <div>
+        <h2>评价指标1(路径规划能力):</h2>
+    </div>
+    <div>
+        <h2>评价指标2(定位精准度):</h2>
+    </div>
+    <div>
+        <h2>评价指标3(动态避障测试):避障响应时间、避障策略有效性（绕行/停止）、碰撞次数</h2>
+    </div>
+    <div>
+        <h2>评价指标4(动态避障测试):狭窄通道、卡死后的自主恢复</h2>
+    </div>
+
+<!--<ul style="list-style-type: square;margin-top:0px">-->
+<!--<li>评价指标1(路径规划能力):</li>-->
+<!--<li>评价指标2(定位精准度):</li>-->
+<!--<li>评价指标3(动态避障测试):避障响应时间、避障策略有效性（绕行/停止）、碰撞次数</li>-->
+<!--<li>评价指标4(动态避障测试):狭窄通道、卡死后的自主恢复</li>-->
+<!--</ul>-->
+</section>
+
+
+
+
+
+<section id="problems">
+<h1>机器人导航性能测试-关键问题记录</h1>
+<ul style="list-style-type: square;margin-top:0px">
+<li>指挥机器人应保持一定时间间隔，语音指令不可太频繁;</li>
+<li>当机器人视线明显受阻的时候(比如摄像头一侧正对着障碍物)，导航指令多不被执行;</li>
+</ul>
+</section>
+
+
+
+
+<section id="suggestions">
+<h1>机器人导航性能测试-性能分析与改进建议</h1>
+<ul style="list-style-type: square;margin-top:0px">
+<li>导航性能综合分析:任务理解能力较强,对环境的理解能力似乎不足;</li>
+<li>改进建议:无。</li>
+</ul>
+</section>
+
+
+
+
+
+<section id="appendix">
+<h1>机器人导航性能测试-附录</h1>
+<div id="tblExplanation">
+<h2> 表格中各个item的含义</h2>
+<ul style="list-style-type: square;margin-top:0px;">
+<li><b>input</b>:用于机器人操作的指令,包含音频以及asr识别出的文字部分;</li>
+<li><b>initLoc</b>:机器人的初始位置:固定位置全视野相机的拍摄结果+导航地图状态;</li>
+<li><b>sys.info</b>:机器人操作系统若干状态记录,包括CPU利用率、CPU温度、内存使用情况;</li>
+<li><b>finalLoc</b>:机器人的停止位置:固定位置全视野相机的拍摄结果+导航地图状态;</li>
+<li><b>pred-result</b>:机器人自己的预测结果,将两次尝试所对应的文本输出结果存储下来;——</li>
+<li><b>observed</b>:测试人员观察是否成功，测试人员的额外观察到的现象或者见解;</li>
+<li><b>su.</b>:导航任务是否成功:是/否;</li>
+<li><b>revision</b>:研发人员可修订、可撰写修改意见——</li>
+</ul>
+</div>
+
+<div id="环境地图">
+<h2> 环境地图</h2>
+    <button class="butImg" text=""> 导航地图状态
+      <div class="large-image">
+        <img src="https://dostore.oss-cn-shenzhen.aliyuncs.com/map001.png" alt="InitLocation">
+      </div>
+</button>
+</div>
+</section>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('button.butText[data-file]');
+
+        buttons.forEach(button => {
+            const contentDiv = button.querySelector('.content-div');
+
+            button.addEventListener('mouseenter', async function() {
+                // 如果已经填充过内容，不再重复获取
+                if (button.dataset.filled === 'true') {
+                    contentDiv.style.display = 'block';
+                    return;
+                }
+
+                const fileUrl = button.dataset.file;
+
+                // 显示加载状态
+                contentDiv.innerHTML = '<span class="loading">加载中...</span>';
+                contentDiv.style.display = 'block';
+
+                // 先计算位置再加载内容
+                calculateOptimalPosition(button, contentDiv);
+
+                try {
+                    const response = await fetch(fileUrl);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const text = await response.text();
+                    contentDiv.innerHTML = text;
+
+                    // 标记为已填充
+                    button.dataset.filled = 'true';
+
+                    // 内容加载后重新计算位置（因为内容高度可能变化）
+                    calculateOptimalPosition(button, contentDiv);
+                } catch (error) {
+                    console.error('获取文件内容失败:', error);
+                    contentDiv.innerHTML = `<span class="error">加载失败: ${error.message}</span>`;
+                }
+            });
+
+            button.addEventListener('mouseleave', function() {
+                contentDiv.style.display = 'none';
+            });
+        });
+
+        function calculateOptimalPosition(button, popup) {
+            const buttonRect = button.getBoundingClientRect();
+            const popupWidth = popup.offsetWidth;
+            const popupHeight = popup.offsetHeight;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            // 默认显示在按钮上方居中
+            let top = buttonRect.top - popupHeight - 10;
+            let left = buttonRect.left + (buttonRect.width / 2) - (popupWidth / 2);
+
+            // 检查右边界
+            if (left + popupWidth > windowWidth) {
+                left = windowWidth - popupWidth - 10;
+            }
+
+            // 检查左边界
+            if (left < 10) {
+                left = 10;
+            }
+
+            // 检查上边界
+            if (top < 10) {
+                // 如果上方空间不足，改为显示在下方
+                top = buttonRect.bottom + 10;
+            }
+
+            // 检查下边界
+            if (top + popupHeight > windowHeight) {
+                // 如果下方空间也不足，限制高度
+                popup.style.maxHeight = (windowHeight - top - 20) + 'px';
+            }
+
+            popup.style.top = top + 'px';
+            popup.style.left = left + 'px';
+        }
+
+        // 窗口大小改变时重新计算位置
+        window.addEventListener('resize', function() {
+            document.querySelectorAll('.content-div').forEach(div => {
+                if (div.style.display === 'block') {
+                    const button = div.parentElement;
+                    calculateOptimalPosition(button, div);
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

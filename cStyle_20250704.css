@@ -1,0 +1,105 @@
+  :root{
+      --minHeight:960px;
+      --borderWidth:0px;
+  }
+
+  .hidden{display: none;}
+
+  body{
+      font-size:21px;
+      font-family: Cambria,"华文中宋";
+  }
+
+  main{
+      position:relative; width:54%;
+      border:solid var(--borderWidth) red;
+      min-height:var(--minHeight);height:100%;
+  }
+
+
+
+h1,h2{margin:0px;}
+h1{font-size:31px;color:#4CAF50;text-align: center;}
+h2{font-size:21px; text-align: left;}
+main,section,textarea,div{box-sizing: border-box;}
+
+
+section{
+    border-bottom:solid 10px black;
+    margin-bottom:50px;
+}
+
+section>div{border-bottom: solid 4px black;}
+section>div:last-of-type{border-bottom-style: hidden;}
+
+table{
+    width:100%;
+    border:solid 2px black;
+    border-left-style: hidden;
+    border-right-style: hidden;
+    /*border-collapse:collapse;*/
+    border-collapse: separate; /* 必须设为 separate */
+   border-spacing: 0 20px;   /* 垂直间距 10px，水平间距 0 */
+}
+
+td,th{border:solid 2px black;text-align:center;}
+th:first-of-type,td:first-of-type{border-left-style: hidden;width:30px;}
+th:last-of-type,td:last-of-type{border-right-style: hidden;}
+/*tr{min-height: 10px;line-height: 1.0;}*/
+/*td{min-height: 20px;}*/
+/*###############################################*/
+      .butImg {
+              position: relative;
+              padding: 2px 5px;
+              background-color: #4CAF50;
+              color: white;
+              border: none;
+              cursor: pointer;
+    }
+
+    .butImg:hover .large-image {
+          transform: scale(3); /* 放大图片 */
+          opacity: 1;
+    }
+
+    .large-image {
+              position: absolute;
+              top: -50%;
+              left: 50%;
+              transform: scale(0); /* 初始尺寸为0 */
+              transition: transform 0.3s ease, opacity 0.3s ease;
+              opacity: 0;
+              pointer-events: none;
+              transform-origin: center;
+              z-index: 1;
+    }
+
+    .large-image img {
+              width: 200px; /* 原始图片尺寸 */
+              height: auto;
+    }
+
+
+  /*###############################################*/
+
+ button.butText {
+            position: relative;
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+  }
+.content-div {
+    display: none;
+    position: fixed; /* 改为fixed定位 */
+    z-index: 100;font-size:21px;
+    min-width: 300px;max-width: 500px;
+    text-align: left;padding: 6px;border-radius: 4px;
+    background:darkcyan;color:cornsilk;
+}
+
+
+.loading { color: #666; font-style: italic; }
+.error {  color: #d32f2f;  }
