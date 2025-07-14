@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ExplanationAgent测试</title>
+<!-- <link rel="stylesheet" type="text/css" href="cStyle_20250715.css"> -->
+<style>
+  body{
+      font-size:31px;
+      font-family: Cambria,"华文中宋";
+  }
+
+  main{
+      position:relative; width:90%;
+      border:solid var(--borderWidth) red;
+      min-height:var(--minHeight);height:100%;
+      margin:0px 5%;
+  }
+
+caption>div:nth-of-type(1){color:red;}
+caption>div:nth-of-type(2){color:green;}
+caption>div:nth-of-type(3){color:blue;}
+tr.type_wrongagent{background:orange;}
+tr.type_lackrequired{background:pink;}
+tr.type_transition{background:aquamarine;}
+tr.low_confidence{background:lightblue;}
+tr.wrong_match{background:deepskyblue;}
+tr.auto_padding{background:hotpink;}
+
+table{
+    width:100%;
+    border:solid 2px black;
+    border-left-style: hidden;
+    border-right-style: hidden;
+    /*border-collapse:collapse;*/
+    border-collapse: separate; /* 必须设为 separate */
+   border-spacing: 0 20px;   /* 垂直间距 10px，水平间距 0 */
+}
+
+td,th{border:solid 2px black;text-align:center;}
+th:first-of-type,td:first-of-type{border-left-style: hidden;}
+th:last-of-type,td:last-of-type{border-right-style: hidden;}
+</style>
+</head>
+
+<body>
+<main>
+<section>
+<h4 style="margin:0px">匹配不成功的几种情况</h4>
+<ul style="margin:0px;list-style-type: square;">
+<li>分配子agent时出错,<span style="background:orange">orange</span>色所示测试样例。原因:提示词不够充分、精准? 问题设置不够差异化?</li>
+<li>type-1-unmatched. 看了下代码，似乎是要求指令必须包含['讲解', '介绍', '说明', '解释', '展示']这几个词才能被考虑:
+<ul style="margin:0px;list-style-type: circle;">
+<li>有时包含这些词，提问比较生硬，不包含则直接跳过;<span style="background:pink">pink</span>部分所示都是这种情况;</li>
+<li>有时候提问包含了这些词，但是经过brain_agent处理后的指令，给子agent处理的指令不再包含这些词语(
+<span style="background:aquamarine;">aquamarine</span>色所示)。 </li>
+<li>??如果非要用这些词的话，是否提醒brain_agent,在给Explaination子Agent生成指令时候融入这些词汇中某一个;</li>
+</ul>
+</li>
+<li>
+<ul style="margin:0px;list-style-type: circle;">
+<li>type-2-unmatched,原因:和任何模块匹配的confidence都很低,<span style="background:lightblue">lightblue</span>色所所示;
+错误匹配,<span style="background:deepskyblue">deepskyblue</span>色所所示。</li>
+<li>??若干想法:
+<ul style="margin:0px">
+<li>(1)提问多是因为不了解所要讲解的内容,所以关键词似乎不应该从content中直接抽取，若用关键词匹配法，关键词应该再设计;
+目前匹配上的，基本都是通过module_name匹配上的，通过关键词匹配上的很少;如果非要硬性覆盖给定的关键词，很难设计提问方式，感觉不符合需求;</li>
+<li>(2)在关键词匹配上，目前感觉比较一刀切。 比如，"故事片"!="故事篇"！="故事"，"百岁居"!="百岁区"，这样直接就匹配不上了，
+这样下来，能匹配上的很少，上面的两种情况能不能算成2/3的匹配度？</li>
+<li>(3)感觉qa和explanation中好些问题差异化有点小，要不要考虑用法大语言模型来帮助匹配?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div>其他观察:有时候，虽然初始的指令中不包含['讲解', '介绍', '说明', '解释', '展示']这些必须词，
+但是，agent会自己加上。<span style="background:hotpink">hotpink</span>部分所示。</div>
+
+
+<div><b>唤醒词部分</b>用起来还是有点吃力。识别率不高(经常识别不到，有时候还把非唤醒语音识别成唤醒词)。
+如果提问的时候直接说"小康，请问如何获取太保百岁居的购买资格"?可能识别不到小康二字，但是用户说了较多的话会比较累也耗时，如果多次说没反应，用户可能失去兴趣;
+如果尝试在小康唤醒后发出一个语音播报，比如说"yes"/"我在"，用户听到回应后，再提问题，这样稍微好一点。但是又有新的麻烦，用户专注听回应，听到后才组织语言提问题，
+超过了代码中设置的slience阈值，结果用户还没开说，就又进入了唤醒词检测中。目前设置的阈值是10，大概就是1秒稍微多。如果设置得大，在正常情况可能显得反应迟钝。
+这个希望开发人员再想想办法。
+</div>
+</section>
+
+
+<section>
+<table style="margin-bottom:100px">
+<thead>
+<tr><th>case有效?</th><th>麦克风识别结果</th><th>涵盖的关键词</th><th>#(key)</th><th>agent指令</th><th>|gt_subagent</th><th>pred_subagent</th><th>|pred_module_name</th><th>匹配成功?</th></tr>
+</thead>
+<tbody>
+<tr class="type_lackrequired"><td>无效</td><td>能讲一讲就医管家的情况吗</td><td>就医管家</td><td>1</td><td>就医管家的情况</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>type-1-unmatched</td><td>否</td></tr>
+<tr class="type_transition"><td>无效</td><td>能展示下就医管家的功能吗</td><td>就医管家</td><td>1</td><td>就医管家的功能</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>type-1-unmatched</td><td>否</td></tr>
+<tr class="type_lackrequired"><td>无效</td><td>就医管家有什么服务</td><td>就医管家</td><td>1</td><td>就医管家的服务</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>type-1-unmatched</td><td>否</td></tr>
+<tr  class="type_lackrequired"><td>无效</td><td>就医管家在预约陪诊和视频医生方面有什么服务</td><td>就医管家、预约、陪诊、视频医生</td><td>5</td><td>就医管家在预约陪诊和视频医生方面的服务</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>type-1-unmatched</td><td>否</td></tr>
+<tr><td>有效</td><td>就医管家讲解书</td><td>就医管家*</td><td>1</td><td>就医管家讲解书</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+<tr><td>有效</td><td>就医管家介绍</td><td>就医管家</td><td>1</td><td>就医管家介绍</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+<tr><td>有效</td><td>请展示一下就医管家的功能</td><td>就医管家</td><td>1</td><td>展示就医管家的功能</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+<tr><td>有效</td><td>能介绍一下就医管家的功能吗</td><td>就医管家</td><td>1</td><td>就医管家的功能介绍</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+</tbody>
+<caption><div>"module_name": "就医管家讲解"</div>
+<div>"keywords": ["就医管家", "预约", "陪诊", "视频医生", "名医", "海外"]</div>
+<div align="left">"content":大家在平时就医看病方不方便？几年前我们可能起大早去医院排号，又困又累；现在线上拼手速等着医院放号，但医院一放号往往是秒空，对老人来说还不会操作。就医管家，来为您解决就医难的问题，从日常健康咨询到慢病专病管理，给老人提供长期持续的健康服务。头疼脑热的日常小病，专业的视频医生可以在家帮您诊断，给您建议；遇到需要就医的中重度病症，我们可以帮您预约门诊，线下陪诊，还可以让名医线上二次诊疗，即便海外（美国、日本）也可以帮您协调名医相助。</div>
+</caption>
+</table>
+
+
+
+
+<table style="margin-bottom:100px">
+<thead>
+<tr><th>case有效?</th><th>麦克风识别结果</th><th>涵盖的关键词</th><th>#(key)</th><th>agent指令</th>
+<th>gt_subagent</th><th>pred_subagent</th><th>pred_module_name</th><th>匹配成功?</th></tr>
+</thead>
+<tbody>
+<tr class="low_confidence"><td>无效</td><td>六一管家故事篇讲解</td><td>-</td><td>0</td><td>六一管家故事篇讲解</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>type-2-unmatched</td><td>否</td></tr>
+<tr class="wrong_match"><td>无效</td><td>就医管家故事篇讲解</td><td>就医管家</td><td>1</td><td>就医管家故事篇讲解</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>就医管家讲解</td><td>否</td></tr>
+<tr  class="type_lackrequired"><td>无效</td><td>能讲一个就医管家相关的故事吗</td><td>就医管家</td><td>1</td><td>就医管家相关的故事</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>type-1-unmatche</td><td>否</td></tr>
+</tbody>
+<caption><div>"module_name": "VR/就医管家故事片讲解"</div>
+<div>"keywords": ["VR", "故事片", "女白领", "就医管家", "服务", "关怀"]</div>
+<div align="left">"content":接下去给各位嘉宾播放一段我们就医管家的服务短片，讲述了因为工作繁忙，抽不出时间陪母亲去医院的女白领，申请了百岁居就医管家服务。就医管家服务发挥了重要作用，全程贴心照料父母的就医事宜，让父母感受到了关怀和温暖，也让子女少了一份后顾之忧。这两段故事片充分展现了我们就医管家服务的重要性和便利性，希望您能通过这些故事片更好地了解我们的服务。</div>
+</caption>
+</table>
+
+
+
+
+
+<table style="margin-bottom:100px">
+<thead>
+<tr><th>case有效?</th><th>麦克风识别结果</th><th>涵盖的关键词</th><th>#(key)</th><th>agent指令</th>
+<th>gt_subagent</th><th>pred_subagent</th><th>pred_module_name</th><th>匹配成功?</th></tr>
+</thead>
+<tbody>
+<tr><td>有效</td><td>能介绍一下客厅体验区的情况吗</td><td>客厅,体验区</td><td>2</td><td>介绍客厅体验区的情况</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+<tr class="auto_padding"><td>有效</td><td>客厅体验区有什么亮点</td><td>客厅,体验区</td><td>2</td><td>介绍客厅体验区的亮点</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+<tr><td>有效</td><td>能展示一下客厅体验区的亮点吗</td><td>客厅,体验区,展示</td><td>3</td><td>展示客厅体验区的亮点</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+<tr><td>有效</td><td>客厅体验区讲解</td><td>客厅,体验区,讲解</td><td>3</td><td>讲解客厅体验区</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+<tr><td>有效</td><td>客厅体验区介绍</td><td>客厅,体验区</td><td>2</td><td>介绍客厅体验区</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+<tr><td>有效</td><td>请介绍一下客厅体验区</td><td>客厅,体验区</td><td>2</td><td>介绍客厅体验区</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+<tr class="auto_padding"><td>有效</td><td>客厅体验区有什么特色</td><td>客厅,体验区</td><td>2</td><td>介绍客厅体验区的特色</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+<tr class="auto_padding"><td>有效</td><td>百岁居客厅体验区有什么亮点吗</td><td>客厅,体验区</td><td>2</td><td>介绍百岁居客厅体验区的亮点</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+</tbody>
+<caption><div>"module_name": "客厅体验区讲解"</div>
+<div>"keywords": ["客厅", "跌倒", "火柴人", "隐私保护", "骨骼识别"]</div>
+<div align="left">"content":客厅可能是我们在家活动最多的地方，也是老人跌倒的高发区域。老人骨质情况变差，摔倒会引发许多伴随风险，众所周知，袁隆平院士就因为一次摔倒，引发了身体其他的问题，最终导致遗憾发生。平常我们许多子女也会在家里装摄像头来时刻查看老人的状态，但大多老人是抗拒的，因为谁也不希望自己的生活被监视。百岁居引入了先进的视频采集系统火柴人，相比于其他摄像头，火柴人不会把老人的实时影响传输到网络和系统中。我们可以来看一下，老人的影像和体态会用火柴人骨骼来代替，能更好地保护老人隐私。如果它监测到了跌倒或老人挥手求助，就会及时向紧急联系人报警。</div>
+</caption>
+</table>
+
+
+
+
+
+
+
+<table style="margin-bottom:100px">
+<thead>
+<tr><th>case有效?</th><th>麦克风识别结果</th><th>涵盖的关键词</th><th>#(key)</th><th>agent指令</th>
+<th>gt_subagent</th><th>pred_subagent</th><th>pred_module_name</th><th>匹配成功?</th></tr>
+</thead>
+<tbody>
+<tr class="type_wrongagent"><td>无效</td><td>百岁居这个品牌有什么特点嗯</td><td>百岁居,品牌</td><td>2</td><td>百岁居这个品牌有什么特点</td><td>ExplanationAgent</td><td>QAAgent(三级响应机制是指什么？)</td><td>-</td><td>否</td></tr>
+<tr class="type_wrongagent"><td>无效</td><td>百岁居品牌和居家养老有什么联系嗯</td><td>百岁居、品牌、居家养老</td><td>3</td><td>百岁居品牌和居家养老有什么联系</td><td>ExplanationAgent</td><td>QAAgent(为什么还没人联系我安装安全管家设备呢)</td><td>-</td><td>否</td></tr>
+<tr class="type_wrongagent"><td>无效</td><td>能介绍一下百岁居这个品牌吗</td><td>百岁居、品牌</td><td>2</td><td>能介绍一下百岁居这个品牌吗</td><td>ExplanationAgent</td><td>QAAgent(如何购买百岁居)</td><td>-</td><td>否</td></tr>
+<tr class="type_wrongagent"><td>无效</td><td> 百岁居品牌是如何结合居家养老和养老格局的</td><td>百岁居、品牌、居家养老、养老格局</td><td>4</td><td>百岁居品牌是如何结合居家养老和养老格局的</td><td>ExplanationAgent</td><td>QAAgent(体验版、小居家、大居家客户如何加购照护服务？)</td><td>-</td><td>否</td></tr>
+<tr><td>有效</td><td>能讲一讲百岁居品牌的样板间展示吗</td><td>百岁居、品牌、样板间</td><td>3</td><td>百岁居品牌的样板间展示</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>-</td><td>是</td></tr>
+</tbody>
+<caption><div>"module_name": "百岁居品牌展示讲解"</div>
+<div>"keywords": ["百岁居", "品牌", "样板间", "居家养老", "养老格局", "9073"]</div>
+<div align="left">"content":根据最新的人口普查数据，60岁以上的老年人已达2.9亿，占比高达21%，养老已经成为全社会共同关注的话题。目前我国老年人大多数都在居家和社区养老，形成"9073"的养老格局，即90%左右的老年人都在居家养老，7%左右的老年人依托社区支持养老，3%的老年人入住机构养老。相比社区、机构养老，居家养老是一种让子女更放心让老人更有安全感的一种养老方式。老人能待在自己熟悉的家里，会更有安全感和归属感，心里更踏实。然后呢，居家养老成本相对较低，不用支付机构那么高昂的费用。再者，居家养老的服务方式更灵活多变，可以根据老人的具体需求和习惯来提供个性化服务。它可以在现代社会压力这么大的情况下用较小的成本满足老年人的服务需求来减轻子女们的身体和经济负担。今天我会从居家安全、健康就医、长者照护三个方面为大家介绍咱们百岁居的居家养老模式。</div>
+</caption>
+</table>
+
+
+
+<table style="margin-bottom:100px">
+<thead>
+<tr><th>case有效?</th><th>麦克风识别结果</th><th>涵盖的关键词</th><th>#(key)</th><th>agent指令</th>
+<th>gt_subagent</th><th>pred_subagent</th><th>pred_module_name</th><th>匹配成功?</th></tr>
+</thead>
+<tbody>
+<tr class="type_lackrequired"><td>无效</td><td>安全管家石井沙盘是如何保障安全的</td><td>安全管家,安全</td><td>2</td><td>安全管家石井沙盘是如何保障安全的</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>Type-1-unmatch</td><td>否</td></tr>
+<tr class="type_lackrequired"><td>无效</td><td>安全管家如何保障独立居住的老人的安全</td><td>安全管家,独立居住,安全</td><td>3</td><td>安全管家如何保障独立居住的老人的安全</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>Type-1-unmatch</td><td>否</td></tr>
+<tr><td>有效</td><td>你能讲解一下安全管家石井沙盘么</td><td>安全管家</td><td>1</td><td>安全管家石井沙盘讲解</td><td>ExplanationAgent</td><td>-</td><td>-</td><td>是</td></tr>
+<tr><td>有效</td><td>你能简要介绍一下安全管家石井沙盘吗</td><td>安全管家</td><td>1</td><td>安全管家实景沙盘讲解</td><td>ExplanationAgent</td><td>-</td><td>-</td><td>是</td></tr>
+<tr><td>有效</td><td>你能简要介绍一下安全管家吗</td><td>安全管家</td><td>1</td><td>安全管家实景沙盘讲解</td><td>ExplanationAgent</td><td>-</td><td>-</td><td>是</td></tr>
+</tbody>
+<caption><div>"module_name": "安全管家实景沙盘讲解"</div>
+<div>"keywords": ["安全管家", "实景沙盘", "智能设备", "独立居住", "安全"]</div>
+<div align="left">"content":在长者的日常生活中，安全是最为重要的，根据第七次人口普查数据，中国现在超过6成老年人处于独立居住状态，这也意味着很多老年人在家中的突发事件，作为子女可能无法第一时间知晓和进行照料。而百岁居正是将长者的安全放在了首位，时刻呵护长者的居家安全。大家可以看到安全管家的智能设备可以安装在家里的各个场景下。在厨房可以安装环境监测设备；在卫生间可以安装拉绳报警、体态监测；在卧室可以安装睡眠监测；在客厅可以安装火柴人摄像头等安全设备。这些智能安全设备可以全面监测居家的各种情况，能守护老人的居家安全，让老人可以安心、安全地生活在家中。</div>
+</caption>
+</table>
+
+
+<table style="margin-bottom:100px">
+<thead>
+<tr><th>case有效?</th><th>麦克风识别结果</th><th>涵盖的关键词</th><th>#(key)</th><th>agent指令</th>
+<th>gt_subagent</th><th>pred_subagent</th><th>pred_module_name</th><th>匹配成功?</th></tr>
+</thead>
+<tbody>
+<tr class="type_lackrequired"><td>无效</td><td>能讲一讲安全管家环境预警的情况吗</td><td>安全管家,环境预警</td><td>2</td><td>安全管家环境预警的情况</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>Type-1-unmatch</td><td>否</td></tr>
+<tr class="type_lackrequired"><td>无效</td><td>安全管家的环境预警的作用是什么</td><td>安全管家,环境预警</td><td>2</td><td>安全管家环境预警的作用</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>Type-1-unmatch</td><td>否</td></tr>
+<tr class="type_lackrequired"><td>无效</td><td>安全管家中的环境预警能做哪些方面的预警检测</td><td>安全管家,环境预警,检测</td><td>3</td><td>安全管家环境预警的检测方面</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>Type-1-unmatch</td><td>否</td></tr>
+<tr class="type_lackrequired"><td>无效</td><td>漏水燃气烟物和门窗未关是如何检测的</td><td>漏水,燃气,门窗,检测</td><td>4</td><td>漏水、燃气、烟雾和门窗未关的检测方法</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>Type-1-unmatch</td><td>否</td></tr>
+<tr class="type_lackrequired"><td>无效</td><td>能介绍一下安全管家环境预警的情况吗</td><td>安全管家，环境预警</td><td>2</td><td>安全管家环境预警的情况</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>Type-1-unmatch</td><td>否</td></tr>
+<tr class="type_transition"><td>无效</td><td>你能讲解一下漏水燃气烟雾和门窗外关是如何检测的吗</td><td>漏水、燃气、门窗、检测</td><td>4</td><td>漏水、燃气、烟雾和门窗未关的检测方法</td><td>ExplanationAgent</td><td>ExplanationAgent</td><td>Type-1-unmatch</td><td>否</td></tr>
+</tbody>
+<caption><div>"module_name": "安全管家环境预警讲解"</div>
+<div>"keywords": ["环境预警", "漏水", "燃气", "烟雾", "门窗", "检测", "报警"]</div>
+<div align="left">"content":我们三大管家中的的安全管家，防范老人出现意外问题。子女可以通过手机远程了解老人在家的情况，像子女平常工作忙，不能时时刻刻陪着爸妈的，万一有意外情况可能关注不到。老人岁数大了，记忆力减退，经常忘事，忘了关水、关火、关煤气都是时常发生的事，一旦发生漏水火灾等意外，后果不堪设想。之前，在我的家里就出现过这样的问题，晚上在睡觉的时候就发现厨房有漏水声，上楼查看发现是独居的老奶奶忘了关水，造成了漏水，如果换做是我们家中的老人，自己也不好处理这样的情况，如果发生漏水时我们能及时发现，就不会有这样的问题了。所以我们为老人家中安装漏水检测、燃气检测、烟雾检测和门窗未关检测设备，如果监测区域内发生这些意外情况，手机上第一时间就能接到报警，以便我们更好的应对处理，帮助减少财产损失，降低人身安全威胁，就算在外地，也能知道爸妈的情况，是不是就安心多了。</div>
+</caption>
+</table>
+</section>
+</main>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('button.butText[data-file]');
+
+        buttons.forEach(button => {
+            const contentDiv = button.querySelector('.content-div');
+
+            button.addEventListener('mouseenter', async function() {
+                // 如果已经填充过内容，不再重复获取
+                if (button.dataset.filled === 'true') {
+                    contentDiv.style.display = 'block';
+                    return;
+                }
+
+                const fileUrl = button.dataset.file;
+
+                // 显示加载状态
+                contentDiv.innerHTML = '<span class="loading">加载中...</span>';
+                contentDiv.style.display = 'block';
+
+                // 先计算位置再加载内容
+                calculateOptimalPosition(button, contentDiv);
+
+                try {
+                    const response = await fetch(fileUrl);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const text = await response.text();
+                    contentDiv.innerHTML = text;
+
+                    // 标记为已填充
+                    button.dataset.filled = 'true';
+
+                    // 内容加载后重新计算位置（因为内容高度可能变化）
+                    calculateOptimalPosition(button, contentDiv);
+                } catch (error) {
+                    console.error('获取文件内容失败:', error);
+                    contentDiv.innerHTML = `<span class="error">加载失败: ${error.message}</span>`;
+                }
+            });
+
+            button.addEventListener('mouseleave', function() {
+                contentDiv.style.display = 'none';
+            });
+        });
+
+        function calculateOptimalPosition(button, popup) {
+            const buttonRect = button.getBoundingClientRect();
+            const popupWidth = popup.offsetWidth;
+            const popupHeight = popup.offsetHeight;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            // 默认显示在按钮上方居中
+            let top = buttonRect.top - popupHeight - 10;
+            let left = buttonRect.left + (buttonRect.width / 2) - (popupWidth / 2);
+
+            // 检查右边界
+            if (left + popupWidth > windowWidth) {
+                left = windowWidth - popupWidth - 10;
+            }
+
+            // 检查左边界
+            if (left < 10) {
+                left = 10;
+            }
+
+            // 检查上边界
+            if (top < 10) {
+                // 如果上方空间不足，改为显示在下方
+                top = buttonRect.bottom + 10;
+            }
+
+            // 检查下边界
+            if (top + popupHeight > windowHeight) {
+                // 如果下方空间也不足，限制高度
+                popup.style.maxHeight = (windowHeight - top - 20) + 'px';
+            }
+
+            popup.style.top = top + 'px';
+            popup.style.left = left + 'px';
+        }
+
+        // 窗口大小改变时重新计算位置
+        window.addEventListener('resize', function() {
+            document.querySelectorAll('.content-div').forEach(div => {
+                if (div.style.display === 'block') {
+                    const button = div.parentElement;
+                    calculateOptimalPosition(button, div);
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
